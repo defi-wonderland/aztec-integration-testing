@@ -104,7 +104,6 @@ contract UnitTest {
         storage.admin_pvt.replace(&mut admin_note, false);
     }
 
-    // TODO: No method named 'serialize' found for type 'FieldNote'
     #[aztec(private)]
     fn get_admin_pvt() -> [Field; 1] {
         let field_note = storage.admin_pvt.view_note();
