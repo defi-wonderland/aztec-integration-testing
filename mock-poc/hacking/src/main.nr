@@ -119,13 +119,14 @@ contract UnitTest {
         // create mock
         let storage_slot = 2;
 
+        // set header to empty except the storage slot
         let header = NoteHeader { contract_address: AztecAddress { inner: 0 }, storage_slot, nonce: 0, is_transient: false };
         admin_note.set_header(header);
 
-        let randomHashValue = 0;
         let inner_hash = dep::aztec::note::utils::compute_inner_note_hash(admin_note);
         let note_type_id = FieldNote::get_note_type_id();
-        let _mock1 = OracleMock::mock("notifyCreatedNote").with_params((storage_slot, note_type_id ,admin_note.serialize_content(), inner_hash)).returns(randomHashValue);
+        // mock needs to return 0 (assert success in create note)
+        let _mock1 = OracleMock::mock("notifyCreatedNote").with_params((storage_slot, note_type_id ,admin_note.serialize_content(), inner_hash)).returns(0);
 
         // call fn 
         let pvt_circ_pub_inputs = init_pvt(dep::std::unsafe::zeroed(), admin_pvt_addr);
