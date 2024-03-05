@@ -6,7 +6,8 @@ contract UnitTest {
     use dep::aztec::{
         context::{PrivateContext, PublicContext, Context}, log::emit_unencrypted_log,
         state_vars::{public_state::PublicState, singleton::Singleton},
-        oracle::rand::rand
+        oracle::rand::rand,
+        note::note_header::NoteHeader
     };
     use dep::aztec::protocol_types::{
         abis::{function_selector::FunctionSelector, side_effect::{SideEffect, SideEffectLinkedToNoteHash}},
@@ -113,15 +114,18 @@ contract UnitTest {
     #[test]
     unconstrained fn test_private_storage() {
         let admin_pvt_addr = AztecAddress { inner: 10 };
-        let admin_note = FieldNote::new(10);
+        let mut admin_note = FieldNote::new(10);
 
         // create mock
-        let storageSlot = 2;
+        let storage_slot = 2;
+
+        let header = NoteHeader { contract_address: AztecAddress { inner: 0 }, storage_slot, nonce: 0, is_transient: false };
+        admin_note.set_header(header);
+
         let randomHashValue = 0;
-        // let inner_hash = dep::aztec::note::note_hash::compute_inner_hash(storageSlot, admin_note.compute_note_hash());
         let inner_hash = dep::aztec::note::utils::compute_inner_note_hash(admin_note);
         let note_type_id = FieldNote::get_note_type_id();
-        let _mock1 = OracleMock::mock("notifyCreatedNote").with_params((storageSlot, note_type_id ,admin_note.serialize_content(), inner_hash)).returns(randomHashValue);
+        let _mock1 = OracleMock::mock("notifyCreatedNote").with_params((storage_slot, note_type_id ,admin_note.serialize_content(), inner_hash)).returns(randomHashValue);
 
         // call fn 
         let pvt_circ_pub_inputs = init_pvt(dep::std::unsafe::zeroed(), admin_pvt_addr);
