@@ -105,10 +105,11 @@ contract UnitTest {
     }
 
     // TODO: No method named 'serialize' found for type 'FieldNote'
-    // #[aztec(private)]
-    // fn get_admin_pvt() -> FieldNote {
-    //     storage.admin_pvt.view_note()
-    // }
+    #[aztec(private)]
+    fn get_admin_pvt() -> [Field; 1] {
+        let field_note = storage.admin_pvt.view_note();
+        field_note.serialize_content()
+    }
 
     // TODO: Unknown foreign call notifyCreatedNote
     #[test]
@@ -152,10 +153,10 @@ contract UnitTest {
         returnVal[2] = 1; // return header - nonce
         returnVal[3] = 0; // return header - is_transient
         returnVal[4] = admin_note.value; // note 1 - value
-        // // TODO: mock individual items. (print value going to `get_notes_oracle() in notes.nr)
-        // OracleMock::mock("getNotes").returns(returnVal).times(2);
-        // let pvt_circ_pub_inputs = get_admin_pvt(dep::std::unsafe::zeroed());
-        // assert_eq(pvt_circ_pub_inputs.return_values[0], 10);
+        // TODO: mock individual items. (print value going to `get_notes_oracle() in notes.nr)
+        OracleMock::mock("getNotes").returns(returnVal).times(2);
+        let pvt_circ_pub_inputs = get_admin_pvt(dep::std::unsafe::zeroed());
+        assert_eq(pvt_circ_pub_inputs.return_values[0], 10);
     }
 
     // //////////////////////
