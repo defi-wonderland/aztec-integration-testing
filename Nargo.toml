@@ -2,4 +2,6 @@
 members = [
     "mock-poc/context",
     "mock-poc/hacking",
+    "mock-poc/integration",
+    "mock-poc/local-oracle",
 ]
