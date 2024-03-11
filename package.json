@@ -8,6 +8,7 @@
     "run:oracle": "node ./src/server.js"
   },
   "dependencies": {
+    "@aztec/aztec.js": "^0.26.6",
     "express": "^4.18.3",
     "json-rpc-2.0": "^1.7.0"
   }

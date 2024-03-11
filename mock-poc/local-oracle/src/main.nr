@@ -15,18 +15,15 @@ contract LocalOracle {
 
     #[test]
     fn test_sqrt() {
-        let input = [2,3];
+        let input = [9];
         let sqrt = get_sqrt(input);
         assert(sqrt[0].pow_32(2) as u64 == input[0] as u64);
-        assert(sqrt[1].pow_32(2) as u64 == input[1] as u64);
     }
 
     #[oracle(getSqrt)]
-    unconstrained fn sqrt(input: [Field; 2]) -> pub [Field; 2] { }
+    unconstrained fn sqrt(input: [Field; 1]) -> pub [Field; 1] { }
 
-    unconstrained fn get_sqrt(input: [Field; 2]) -> pub [Field; 2] {
+    unconstrained fn get_sqrt(input: [Field; 1]) -> pub [Field; 1] {
         sqrt(input)
     }
-
-
 }
