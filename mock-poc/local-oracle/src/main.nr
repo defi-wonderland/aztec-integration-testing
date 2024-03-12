@@ -20,10 +20,16 @@ contract LocalOracle {
         assert(sqrt[0].pow_32(2) as u64 == input[0] as u64);
     }
 
-    #[oracle(getSqrt)]
-    unconstrained fn sqrt(input: [Field; 1]) -> pub [Field; 1] { }
+    #[test]
+    fn test_deploy() {
+        let contract = deploy_contract();
+        assert(1 == 1);
+    }
 
-    unconstrained fn get_sqrt(input: [Field; 1]) -> pub [Field; 1] {
-        sqrt(input)
+    #[oracle(deployContract)]
+    unconstrained fn deploy() -> pub [AztecAddress; 1] { }
+
+    unconstrained fn deploy_contract() -> pub [AztecAddress; 1] {
+        deploy()
     }
 }

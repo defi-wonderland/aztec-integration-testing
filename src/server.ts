@@ -7,7 +7,7 @@ import {
 import bodyParser from "body-parser";
 import express from "express";
 import { JSONRPCServer } from "json-rpc-2.0";
-import {initSandbox} from './sandbox.ts';
+import {deployContract, initSandbox} from './sandbox.ts';
 
 const PORT = 5555;
 const app = express();
@@ -24,8 +24,9 @@ server.addMethod("getSqrt", async (params) => {
   return { values: [{ Array: values }] };
 });
 
-server.addMethod("deploy", async (params) => {
-  
+server.addMethod("deployContract", async (params) => {
+  let contractAddy = await deployContract(pxe);
+  return toACVMField(contractAddy);
 });
 
 app.post("/", (req, res) => {
