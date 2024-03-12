@@ -19,8 +19,8 @@ contract UnitTest {
     struct Storage {
         admin: PublicState<AztecAddress>,
         admin_pvt: Singleton<FieldNote>,
-
     }
+    
     impl Storage {
         fn init(context: Context) -> Self {
             Storage {

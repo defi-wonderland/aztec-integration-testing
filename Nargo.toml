@@ -3,4 +3,5 @@ members = [
     "mock-poc/context",
     "mock-poc/hacking",
     "mock-poc/local-oracle",
+    "mocks/meaning-of-life",
 ]
