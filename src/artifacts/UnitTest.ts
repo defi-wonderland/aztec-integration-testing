@@ -25,19 +25,19 @@ import {
   Wallet,
   WrappedFieldLike,
 } from '@aztec/aztec.js';
-import LocalOracleContractArtifactJson from '../../target/context-LocalOracle.json' assert { type: 'json' };
-export const LocalOracleContractArtifact = loadContractArtifact(LocalOracleContractArtifactJson as NoirCompiledContract);
+import UnitTestContractArtifactJson from '../../target/context-UnitTest.json' assert { type: 'json' };
+export const UnitTestContractArtifact = loadContractArtifact(UnitTestContractArtifactJson as NoirCompiledContract);
 
 /**
- * Type-safe interface for contract LocalOracle;
+ * Type-safe interface for contract UnitTest;
  */
-export class LocalOracleContract extends ContractBase {
+export class UnitTestContract extends ContractBase {
   
   private constructor(
     instance: ContractInstanceWithAddress,
     wallet: Wallet,
   ) {
-    super(instance, LocalOracleContractArtifact, wallet);
+    super(instance, UnitTestContractArtifact, wallet);
   }
   
 
@@ -52,7 +52,7 @@ export class LocalOracleContract extends ContractBase {
     address: AztecAddress,
     wallet: Wallet,
   ) {
-    return Contract.at(address, LocalOracleContract.artifact, wallet) as Promise<LocalOracleContract>;
+    return Contract.at(address, UnitTestContract.artifact, wallet) as Promise<UnitTestContract>;
   }
 
   
@@ -60,28 +60,28 @@ export class LocalOracleContract extends ContractBase {
    * Creates a tx to deploy a new instance of this contract.
    */
   public static deploy(wallet: Wallet, ) {
-    return new DeployMethod<LocalOracleContract>(Point.ZERO, wallet, LocalOracleContractArtifact, LocalOracleContract.at, Array.from(arguments).slice(1));
+    return new DeployMethod<UnitTestContract>(Point.ZERO, wallet, UnitTestContractArtifact, UnitTestContract.at, Array.from(arguments).slice(1));
   }
 
   /**
    * Creates a tx to deploy a new instance of this contract using the specified public key to derive the address.
    */
   public static deployWithPublicKey(publicKey: PublicKey, wallet: Wallet, ) {
-    return new DeployMethod<LocalOracleContract>(publicKey, wallet, LocalOracleContractArtifact, LocalOracleContract.at, Array.from(arguments).slice(2));
+    return new DeployMethod<UnitTestContract>(publicKey, wallet, UnitTestContractArtifact, UnitTestContract.at, Array.from(arguments).slice(2));
   }
 
   /**
    * Creates a tx to deploy a new instance of this contract using the specified constructor method.
    */
-  public static deployWithOpts<M extends keyof LocalOracleContract['methods']>(
+  public static deployWithOpts<M extends keyof UnitTestContract['methods']>(
     opts: { publicKey?: PublicKey; method?: M; wallet: Wallet },
-    ...args: Parameters<LocalOracleContract['methods'][M]>
+    ...args: Parameters<UnitTestContract['methods'][M]>
   ) {
-    return new DeployMethod<LocalOracleContract>(
+    return new DeployMethod<UnitTestContract>(
       opts.publicKey ?? Point.ZERO,
       opts.wallet,
-      LocalOracleContractArtifact,
-      LocalOracleContract.at,
+      UnitTestContractArtifact,
+      UnitTestContract.at,
       Array.from(arguments).slice(1),
       opts.method ?? 'constructor',
     );
@@ -93,7 +93,7 @@ export class LocalOracleContract extends ContractBase {
    * Returns this contract's artifact.
    */
   public static get artifact(): ContractArtifact {
-    return LocalOracleContractArtifact;
+    return UnitTestContractArtifact;
   }
   
 
@@ -102,12 +102,6 @@ export class LocalOracleContract extends ContractBase {
     
     /** constructor() */
     constructor: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
-
-    /** deploy() */
-    deploy: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
-
-    /** deploy_contract() */
-    deploy_contract: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
 
     /** compute_note_hash_and_nullifier(contract_address: struct, nonce: field, storage_slot: field, note_type_id: field, serialized_note: array) */
     compute_note_hash_and_nullifier: ((contract_address: AztecAddressLike, nonce: FieldLike, storage_slot: FieldLike, note_type_id: FieldLike, serialized_note: FieldLike[]) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;

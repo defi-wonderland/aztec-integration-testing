@@ -14,15 +14,8 @@ contract LocalOracle {
     fn constructor() {}
 
     #[test]
-    fn test_sqrt() {
-        let input = [9];
-        let sqrt = get_sqrt(input);
-        assert(sqrt[0].pow_32(2) as u64 == input[0] as u64);
-    }
-
-    #[test]
     fn test_deploy() {
-        let contract = deploy_contract();
+        let thing = deploy_contract();
         assert(1 == 1);
     }
 

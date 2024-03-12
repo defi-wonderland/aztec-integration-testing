@@ -1,6 +1,6 @@
 import { createAccount } from "@aztec/accounts/testing";
 import { createPXEClient, initAztecJs, PXE } from "@aztec/aztec.js";
-import { MeaningOfLifeContract } from "./artifacts/MeaningOfLife";
+import { MeaningOfLifeContract } from "./artifacts/MeaningOfLife.ts";
 
 export const initSandbox = async () => {
     const SANDBOX_URL = "http://localhost:8080";

@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "aztec-nargo test --workspace --oracle-resolver 'http://localhost:5555/'",
-    "run:oracle": "ts-node --loader ts-node/esm ./src/server.ts",
-    "run:oracle:dev": "ts-node-dev --transpile-only --respawn ./src/server.ts",
-    "run:oracle:dev:2": "node --loader ts-node/esm --experimental-specifier-resolution=node ./src/server.ts"
+    "run:oracle": "ts-node-esm ./src/server.ts"
   },
   "dependencies": {
     "@aztec/accounts": "^0.26.0",
