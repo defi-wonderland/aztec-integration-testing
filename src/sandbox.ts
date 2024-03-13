@@ -12,7 +12,7 @@ export const initSandbox = async () => {
 export const deployContract = async (pxe: PXE) => {
     let deployer = await createAccount(pxe);
     let deployedContract = await MeaningOfLifeContract.deploy(deployer).send().deployed();
-    console.log(deployedContract);
+    console.log(deployedContract.address);
     return deployedContract.address;
 };
   

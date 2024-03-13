@@ -20,9 +20,9 @@ contract LocalOracle {
     }
 
     #[oracle(deployContract)]
-    unconstrained fn deploy() -> pub [AztecAddress; 1] { }
+    unconstrained fn deploy() -> pub AztecAddress { }
 
-    unconstrained fn deploy_contract() -> pub [AztecAddress; 1] {
+    unconstrained fn deploy_contract() -> pub AztecAddress {
         deploy()
     }
 }

@@ -26,7 +26,7 @@ server.addMethod("getSqrt", async (params) => {
 
 server.addMethod("deployContract", async (params) => {
   let contractAddy = await deployContract(pxe);
-  return toACVMField(contractAddy);
+  return { values: [{ Single: { inner: contractAddy.toString() } }] };
 });
 
 app.post("/", (req, res) => {
