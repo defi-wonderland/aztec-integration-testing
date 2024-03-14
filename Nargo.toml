@@ -1,4 +1,7 @@
 [workspace]
 members = [
     "mock-poc/context",
+    "mock-poc/hacking",
+    "mock-poc/local_oracle",
+    "mocks/meaning-of-life",
 ]

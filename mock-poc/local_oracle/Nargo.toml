@@ -1,5 +1,5 @@
 [package]
-name = "context"
+name = "local_oracle"
 type = "contract"
 authors = ["wonderland"]
 compiler_version = ">=0.23.0"
