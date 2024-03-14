@@ -1,6 +1,9 @@
 
-// https://github.com/AztecProtocol/aztec-packages/blob/827afd10edfca8b2c8273742717f039981543194/noir-projects/aztec-nr/aztec/src/oracle/context.nr
-use dep::aztec::protocol_types::{address::AztecAddress, abis::function_selector::FunctionSelector, constants::RETURN_VALUES_LENGTH};
+use dep::aztec::protocol_types::{
+    address::AztecAddress,
+    abis::function_selector::FunctionSelector,
+    constants::RETURN_VALUES_LENGTH
+};
 
 contract LocalOracle {
 
@@ -25,9 +28,13 @@ contract LocalOracle {
     fn test_interact() {
         let deployment_address = deploy_contract();
 
+        let function_selector = FunctionSelector::from_signature("get_meaning_of_life()");
+
         // add oracle call for the public/private call
+        let result = view(deployment_address, function_selector, [Field::zero(); 4]);
 
         // assert result
+        assert(result == 42);
     }
 
     #[oracle(deployContract)]
@@ -35,5 +42,13 @@ contract LocalOracle {
 
     unconstrained fn deploy_contract() -> pub AztecAddress {
         deploy()
+    }
+
+    // for now, 4 args -> same as callstack limit?
+    #[oracle(view)]
+    unconstrained fn view_oracle(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field {}
+
+    unconstrained fn view(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field {
+        view_oracle(contract_address, method_name, args)
     }
 }

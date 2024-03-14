@@ -7,7 +7,7 @@ import {
 import bodyParser from "body-parser";
 import express from "express";
 import { JSONRPCServer } from "json-rpc-2.0";
-import {deployContract, initSandbox} from './sandbox.ts';
+import { deployContract, unconstrainedCall, initSandbox } from "./sandbox.ts";
 
 const PORT = 5555;
 const app = express();
@@ -17,16 +17,35 @@ let pxe: PXE;
 
 const server = new JSONRPCServer();
 
+// Example: compute square root
 server.addMethod("getSqrt", async (params) => {
-  const values = params[0].Array.map(({ inner }: {inner: string}) => {
+  const values = params[0].Array.map(({ inner }: { inner: string }) => {
     return { inner: `${Math.sqrt(parseInt(inner, 16))}` };
   });
   return { values: [{ Array: values }] };
 });
 
+// Deploy a contract
 server.addMethod("deployContract", async (params) => {
   let contractAddy = await deployContract(pxe);
   return { values: [{ Single: { inner: contractAddy.toString() } }] };
+});
+
+// Handles a call to an unconstrained function
+// Todo: handle array of args and return values
+server.addMethod("view", async (params) => {
+  const contractAddress = params[0].Single.inner;
+  const methodName = params[1].Single.inner;
+  const args = params[2].Array.map(({ inner }: { inner: string }) => inner);
+
+  const result = await unconstrainedCall(
+    pxe,
+    contractAddress,
+    methodName,
+    args
+  );
+
+  return { values: [{ Single: { inner: result.toString() } }] };
 });
 
 app.post("/", (req, res) => {
