@@ -1,17 +1,13 @@
-
-use dep::aztec::protocol_types::{
-    address::AztecAddress,
-    abis::function_selector::FunctionSelector,
-    constants::RETURN_VALUES_LENGTH
-};
-
 contract LocalOracle {
 
     use dep::std::test::OracleMock;
 
     use dep::aztec::{
         oracle::context::get_portal_address,
-        protocol_types::address::{AztecAddress, EthAddress},
+        protocol_types::{
+            abis::function_selector::FunctionSelector,
+            address::AztecAddress,
+            constants::RETURN_VALUES_LENGTH}
     };
 
     #[aztec(private)]
@@ -31,7 +27,7 @@ contract LocalOracle {
         let function_selector = FunctionSelector::from_signature("get_meaning_of_life()");
 
         // add oracle call for the public/private call
-        let result = view(deployment_address, function_selector, [Field::zero(); 4]);
+        let result = view(deployment_address, function_selector, [0,0,0,0]);
 
         // assert result
         assert(result == 42);
