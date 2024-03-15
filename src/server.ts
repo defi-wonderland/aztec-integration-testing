@@ -37,7 +37,7 @@ server.addMethod("view", async (params) => {
   const contractAddress = params[0].Single.inner;
   const methodName = params[1].Single.inner;
   const args = params[2].Array.map(({ inner }: { inner: string }) => inner);
-
+console.log(contractAddress, methodName, args);
   const result = await unconstrainedCall(
     pxe,
     contractAddress,

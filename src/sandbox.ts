@@ -1,7 +1,11 @@
 import { createAccount } from "@aztec/accounts/testing";
 import {
   AztecAddress,
+  ContractInstanceWithAddress,
   createPXEClient,
+  DeployedContract,
+  EthAddress,
+  Fr,
   initAztecJs,
   PXE,
 } from "@aztec/aztec.js";
@@ -20,6 +24,24 @@ export const deployContract = async (pxe: PXE) => {
     .send()
     .deployed();
   console.log(deployedContract.address);
+
+  let instance: ContractInstanceWithAddress = {
+    version: 1,
+    salt: new Fr(0),
+    contractClassId: new Fr(0),
+    initializationHash: new Fr(0),
+    portalContractAddress: new EthAddress(Buffer.allocUnsafe(20).fill("")),
+    publicKeysHash: new Fr(0),
+    address: deployedContract.address,
+  };
+
+  let deployedContractInstance: DeployedContract = {
+    artifact: MeaningOfLifeContract.artifact,
+    instance,
+  };
+
+  await pxe.addContracts([deployedContractInstance]);
+
   return deployedContract.address;
 };
 
