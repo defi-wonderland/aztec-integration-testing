@@ -6,10 +6,9 @@
 1) Copy-Paste the /mock-poc/local-oracle  (our repo) to aztec-packages/noir-projects/noir-contracts (for now, use the 0.26 release)
 1) Add it to the workspaces in nargo
 1) Run bootstrap.sh (might or might not be taking some time, depending on config - go touch some grass or learn rust in the meantime)
-1) compile noir-contracts with the local nargo: ../../noir/noir-repo/target/release/nargo compile
 1) from inside aztec-packages/noir-projects/noir-contracts run ../../noir/noir-repo/target/release/nargo test --oracle-resolver 'http://localhost:5555/' --silence-warnings --package local_oracle
 
-
+To debug, the debugLog oracle call has been made available to the rpc, but will be logged in the rpc window itself (not in the sandbox)
 
 
 --  Draft note/internal knowledge (aka it took me too long to find this) --

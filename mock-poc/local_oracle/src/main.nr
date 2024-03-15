@@ -1,4 +1,6 @@
 contract LocalOracle {
+use dep::aztec::oracle::debug_log::{ debug_log, debug_log_field };
+
 
     use dep::std::test::OracleMock;
 
@@ -18,7 +20,7 @@ contract LocalOracle {
         let deployment_address = deploy_contract();
 
         assert(deployment_address != AztecAddress::zero());
-    }
+    } 
 
     #[test]
     fn test_interact() {
@@ -30,7 +32,7 @@ contract LocalOracle {
         let result = view(deployment_address, function_selector, [0,0,0,0]);
 
         // assert result
-        assert(result == 42);
+        assert_eq(result, 42);
     }
 
     #[oracle(deployContract)]
