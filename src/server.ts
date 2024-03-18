@@ -2,12 +2,13 @@ import {
   AztecAddress,
   EthAddress,
   Fr,
-  PXE
-} from '@aztec/aztec.js';
+  FunctionSelector,
+  PXE,
+} from "@aztec/aztec.js";
 import bodyParser from "body-parser";
 import express from "express";
 import { JSONRPCServer } from "json-rpc-2.0";
-import {deployContract, initSandbox} from './sandbox.ts';
+import { deployContract, unconstrainedCall, initSandbox } from "./sandbox.ts";
 
 const PORT = 5555;
 const app = express();
@@ -17,35 +18,63 @@ let pxe: PXE;
 
 const server = new JSONRPCServer();
 
+// Example: compute square root
 server.addMethod("getSqrt", async (params) => {
-  const values = params[0].Array.map(({ inner }: {inner: string}) => {
+  const values = params[0].Array.map(({ inner }: { inner: string }) => {
     return { inner: `${Math.sqrt(parseInt(inner, 16))}` };
   });
   return { values: [{ Array: values }] };
 });
 
+// Deploy a contract
 server.addMethod("deployContract", async (params) => {
   let contractAddy = await deployContract(pxe);
   return { values: [{ Single: { inner: contractAddy.toString() } }] };
 });
 
+// Handles a call to an unconstrained function
+// Todo: handle array of args and return values
+server.addMethod("view", async (params) => {
+  const contractAddress = AztecAddress.fromString(params[0].Single.inner);
+  const functionSelector = FunctionSelector.fromString(
+    params[1].Single.inner.slice(-8)
+  );
+
+  // todo: type?
+  const args = params[2].Array.map(({ inner }: { inner: string }) => inner);
+
+  const result = await unconstrainedCall(
+    pxe,
+    contractAddress,
+    functionSelector,
+    args
+  );
+
+  return { values: [{ Single: { inner: new Fr(result).toString() } }] };
+});
+
+server.addMethod("debugLog", async (params) => {
+  console.log("debug log: " + params[0].Single.inner.toString());
+  return { values: [{ Single: { inner: "0" } }] };
+});
+
 app.post("/", (req, res) => {
- const jsonRPCRequest = req.body;
- server.receive(jsonRPCRequest).then((jsonRPCResponse) => {
-  if (jsonRPCResponse) {
-   res.json(jsonRPCResponse);
-  } else {
-   res.sendStatus(204);
-  }
- });
+  const jsonRPCRequest = req.body;
+  server.receive(jsonRPCRequest).then((jsonRPCResponse) => {
+    if (jsonRPCResponse) {
+      res.json(jsonRPCResponse);
+    } else {
+      res.sendStatus(204);
+    }
+  });
 });
 
 app.listen(PORT, () => {
   initSandbox().then((pxe_client) => {
     pxe = pxe_client;
-    console.log(`Oracle running at port: ${PORT}`)
+    console.log(`Oracle resolver running at port: ${PORT}`);
   });
-})
+});
 
 export function toACVMField(value: AztecAddress | EthAddress | Fr | Buffer | boolean | number | bigint | string): string {
   let buffer;
