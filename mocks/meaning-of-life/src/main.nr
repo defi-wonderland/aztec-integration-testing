@@ -20,4 +20,8 @@ contract MeaningOfLife {
         storage.value.initialize(&mut note, false);
     }
 
-}   
+    #[aztec(private)]
+    fn get_value() -> Field {
+        storage.value.get_note().value
+    }
+}

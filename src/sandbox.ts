@@ -16,6 +16,7 @@ import {
   PXE,
   Tx,
   TxExecutionRequest,
+  TxHash,
 } from "@aztec/aztec.js";
 
 import { FunctionData, TxContext } from "@aztec/circuits.js";

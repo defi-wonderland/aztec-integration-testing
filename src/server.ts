@@ -73,7 +73,7 @@ server.addMethod("callPrivateFunction", async (params) => {
     Fr.fromString(inner)
   );
 
-  await internalCall(pxe, contractAddress, functionSelector, args);
+  let _ = await internalCall(pxe, contractAddress, functionSelector, args);
 
   // todo: handle revert -> return false? throw?
   return { values: [{ Single: { inner: "0" } }] };
