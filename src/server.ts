@@ -1,5 +1,6 @@
 import {
   AztecAddress,
+  ContractFunctionInteraction,
   EthAddress,
   Fr,
   FunctionSelector,
@@ -8,7 +9,12 @@ import {
 import bodyParser from "body-parser";
 import express from "express";
 import { JSONRPCServer } from "json-rpc-2.0";
-import { deployContract, unconstrainedCall, initSandbox } from "./sandbox.ts";
+import {
+  deployContract,
+  unconstrainedCall,
+  initSandbox,
+  internalCall,
+} from "./sandbox.ts";
 
 const PORT = 5555;
 const app = express();
@@ -56,6 +62,20 @@ server.addMethod("view", async (params) => {
 server.addMethod("debugLog", async (params) => {
   console.log("debug log: " + params[0].Single.inner.toString());
   return { values: [{ Single: { inner: "0" } }] };
+});
+
+server.addMethod("callPrivateFunction", async (params) => {
+  const contractAddress = AztecAddress.fromString(params[0].Single.inner);
+  const functionSelector = FunctionSelector.fromString(
+    params[1].Single.inner.slice(-8)
+  );
+  const args: Fr[] = params[2].Array.map(
+    ({ inner }: { inner: string }) => inner
+  );
+
+  await internalCall(pxe, contractAddress, functionSelector, args);
+
+  // todo: handle revert -> return false? throw?
 });
 
 app.post("/", (req, res) => {

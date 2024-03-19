@@ -11,8 +11,14 @@ import {
   FunctionArtifact,
   FunctionSelector,
   initAztecJs,
+  PackedArguments,
   PXE,
+  Tx,
+  TxExecutionRequest,
 } from "@aztec/aztec.js";
+
+import { FunctionData, TxContext } from "@aztec/circuits.js";
+
 import { MeaningOfLifeContract } from "./artifacts/MeaningOfLife.ts";
 
 let selectorsResolved = new Map<string, string>();
@@ -57,6 +63,29 @@ export const deployContract = async (pxe: PXE) => {
   });
 
   return deployedContract.address;
+};
+
+export const internalCall = async (
+  pxe: PXE,
+  contractAddress: AztecAddress,
+  functionSelector: FunctionSelector,
+  args: Fr[]
+) => {
+  const functionData = new FunctionData(functionSelector, false, true, false);
+
+  // todo: mocking?
+  const txExecutionRequest = TxExecutionRequest.from({
+    origin: contractAddress,
+    argsHash: new Fr(0),
+    functionData,
+    txContext: TxContext.empty(),
+    packedArguments: [new PackedArguments(args, new Fr(0))],
+    authWitnesses: [],
+  });
+
+  let tx: Tx = await pxe.simulateTx(txExecutionRequest, false);
+
+  // await pxe.sendTx(tx);
 };
 
 export const unconstrainedCall = async (
