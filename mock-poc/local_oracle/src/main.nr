@@ -23,7 +23,7 @@ use dep::aztec::oracle::debug_log::{ debug_log, debug_log_field };
     } 
 
     #[test]
-    fn test_interact() {
+    fn test_view_unconstrained() {
         let deployment_address = deploy_contract();
 
         let function_selector = FunctionSelector::from_signature("get_meaning_of_life()");
@@ -33,6 +33,12 @@ use dep::aztec::oracle::debug_log::{ debug_log, debug_log_field };
 
         // assert result
         assert_eq(result, 42);
+    }   
+    
+    #[test]
+    fn test_internal_call() {
+        let deployment_address = deploy_contract();
+        call_private_function(deployment_address, FunctionSelector::from_signature("set_value(Field)"), [42,0,0,0]);
     }
 
     #[oracle(deployContract)]
@@ -48,5 +54,12 @@ use dep::aztec::oracle::debug_log::{ debug_log, debug_log_field };
 
     unconstrained fn view(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field {
         view_oracle(contract_address, method_name, args)
+    }
+
+    #[oracle(callPrivateFunction)]
+    unconstrained fn call_private_function_oracle(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field{}
+
+    unconstrained fn call_private_function(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) {
+        assert(call_private_function_oracle(contract_address, method_name, args) == 0);
     }
 }

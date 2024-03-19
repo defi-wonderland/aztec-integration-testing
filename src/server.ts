@@ -69,13 +69,14 @@ server.addMethod("callPrivateFunction", async (params) => {
   const functionSelector = FunctionSelector.fromString(
     params[1].Single.inner.slice(-8)
   );
-  const args: Fr[] = params[2].Array.map(
-    ({ inner }: { inner: string }) => inner
+  const args: Fr[] = params[2].Array.map(({ inner }: { inner: string }) =>
+    Fr.fromString(inner)
   );
 
   await internalCall(pxe, contractAddress, functionSelector, args);
 
   // todo: handle revert -> return false? throw?
+  return { values: [{ Single: { inner: "0" } }] };
 });
 
 app.post("/", (req, res) => {
