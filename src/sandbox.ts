@@ -62,6 +62,7 @@ export const deployContract = async (pxe: PXE) => {
   return deployedContract.address;
 };
 
+// todo: add notes -> how to catch them? Or passed as args (cumbersome++)
 export const internalCall = async (
   pxe: PXE,
   contractAddress: AztecAddress,
