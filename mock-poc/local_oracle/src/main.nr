@@ -23,7 +23,7 @@ use dep::aztec::oracle::debug_log::{ debug_log, debug_log_field };
     } 
 
     #[test]
-    fn test_interact() {
+    fn test_view_unconstrained() {
         let deployment_address = deploy_contract();
 
         let function_selector = FunctionSelector::from_signature("get_meaning_of_life()");
@@ -33,6 +33,15 @@ use dep::aztec::oracle::debug_log::{ debug_log, debug_log_field };
 
         // assert result
         assert_eq(result, 42);
+    }   
+    
+    #[test]
+    fn test_internal_call() {
+        let deployment_address = deploy_contract();
+        let tx_hash = call_private_function(deployment_address, FunctionSelector::from_signature("set_value(Field)"), [1337,0,0,0]);
+
+        let number_of_new_notes = get_number_of_new_notes(tx_hash);
+        assert_eq(number_of_new_notes, 1);
     }
 
     #[oracle(deployContract)]
@@ -48,5 +57,19 @@ use dep::aztec::oracle::debug_log::{ debug_log, debug_log_field };
 
     unconstrained fn view(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field {
         view_oracle(contract_address, method_name, args)
+    }
+
+    #[oracle(callPrivateFunction)]
+    unconstrained fn call_private_function_oracle(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field{}
+
+    unconstrained fn call_private_function(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field {
+        call_private_function_oracle(contract_address, method_name, args)
+    }
+
+    #[oracle(getNumberOfNewNotes)]
+    unconstrained fn get_number_of_new_notes_oracle(tx_hash: Field) -> pub Field{}
+
+    unconstrained fn get_number_of_new_notes(tx_hash: Field) -> pub Field {
+        get_number_of_new_notes_oracle(tx_hash)
     }
 }
