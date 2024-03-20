@@ -69,39 +69,53 @@ export const internalCall = async (
   functionSelector: FunctionSelector,
   args: Fr[]
 ) => {
-  const functionName = selectorsResolved.get(functionSelector.toString());
+  // const functionName = selectorsResolved.get(functionSelector.toString());
 
-  const functionArtifact = MeaningOfLifeContract.artifact.functions.find(
-    (f: FunctionArtifact) => f.name === functionName
+  // const functionArtifact = MeaningOfLifeContract.artifact.functions.find(
+  //   (f: FunctionArtifact) => f.name === functionName
+  // );
+
+  // if (!functionArtifact) {
+  //   throw new Error("Function not found");
+  // }
+
+  // const functionData = new FunctionData(functionSelector, false, true, false);
+
+  // // todo: arg type should be fixed here (we pass arrays even for single fields)
+  // const packedArguments = PackedArguments.fromArgs(
+  //   encodeArguments(functionArtifact, [args[0]])
+  // );
+
+  // const txContext = TxContext.empty();
+  // txContext.contractDeploymentData.contractClassId = contractClassId;
+
+  // // todo: mocking?
+  // const txExecutionRequest = TxExecutionRequest.from({
+  //   origin: contractAddress,
+  //   argsHash: computeVarArgsHash([args[0]]),
+  //   functionData,
+  //   txContext,
+  //   packedArguments: [packedArguments],
+  //   authWitnesses: [],
+  // });
+
+  // let tx: Tx = await pxe.simulateTx(txExecutionRequest, true);
+
+  // // TODO: this is not correct or not enough -> sendTx tries to send the tx to the mempool (via the node/p2p server),
+  // // -> we need to build a block and publish it
+  // let txHash = await pxe.sendTx(tx);
+
+  // TODO: obv easier this way, not sure how to mock sender in the future tho:
+  let wallet = await createAccount(pxe);
+  let deployedContract = await MeaningOfLifeContract.at(
+    contractAddress,
+    wallet
   );
 
-  if (!functionArtifact) {
-    throw new Error("Function not found");
-  }
+  // TODO: use the fn selector instead
+  let result = await deployedContract.methods.set_value(args[0]).send().wait();
 
-  const functionData = new FunctionData(functionSelector, false, true, false);
-
-  // todo: arg type should be fixed here (we pass arrays even for single fields)
-  const packedArguments = PackedArguments.fromArgs(
-    encodeArguments(functionArtifact, [args[0]])
-  );
-
-  const txContext = TxContext.empty();
-  txContext.contractDeploymentData.contractClassId = contractClassId;
-
-  // todo: mocking?
-  const txExecutionRequest = TxExecutionRequest.from({
-    origin: contractAddress,
-    argsHash: computeVarArgsHash([args[0]]),
-    functionData,
-    txContext,
-    packedArguments: [packedArguments],
-    authWitnesses: [],
-  });
-
-  let tx: Tx = await pxe.simulateTx(txExecutionRequest, false);
-
-  await pxe.sendTx(tx);
+  return result.txHash;
 };
 
 export const unconstrainedCall = async (

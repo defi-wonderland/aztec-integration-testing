@@ -5,6 +5,7 @@ import {
   Fr,
   FunctionSelector,
   PXE,
+  TxHash,
 } from "@aztec/aztec.js";
 import bodyParser from "body-parser";
 import express from "express";
@@ -73,10 +74,27 @@ server.addMethod("callPrivateFunction", async (params) => {
     Fr.fromString(inner)
   );
 
-  let _ = await internalCall(pxe, contractAddress, functionSelector, args);
+  let txHash = await internalCall(pxe, contractAddress, functionSelector, args);
 
   // todo: handle revert -> return false? throw?
-  return { values: [{ Single: { inner: "0" } }] };
+  return { values: [{ Single: { inner: txHash.toString() } }] };
+});
+
+server.addMethod("getNumberOfNewNotes", async (params) => {
+  const txHash = TxHash.fromString(params[0].Single.inner);
+
+  const txEffect = await pxe.getTxEffect(txHash);
+
+  if (!txEffect) {
+    throw new Error("Invalid hash/no effect found");
+  }
+
+  const filteredNoteHashes = txEffect.noteHashes.filter(
+    (hash) => hash.toString() != new Fr(0).toString()
+  );
+  const numberOfNotes = filteredNoteHashes.length;
+
+  return { values: [{ Single: { inner: numberOfNotes.toString() } }] };
 });
 
 app.post("/", (req, res) => {
