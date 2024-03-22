@@ -44,6 +44,15 @@ use dep::aztec::oracle::debug_log::{ debug_log, debug_log_field };
         assert_eq(number_of_new_notes, 1);
     }
 
+    #[test]
+    fn test_public_call() {
+        let deployment_address = deploy_contract();
+        let tx_hash = call_public_function(deployment_address, FunctionSelector::from_signature("public_function_to_call(Field)"), [1337,0,0,0]);
+
+        // let value_stored = view(deployment_address, FunctionSelector::from_signature("get_public_value()"), [0,0,0,0]);
+        // assert_eq(value_stored, 1337);
+    }
+
     #[oracle(deployContract)]
     unconstrained fn deploy() -> pub AztecAddress { }
 
@@ -64,6 +73,13 @@ use dep::aztec::oracle::debug_log::{ debug_log, debug_log_field };
 
     unconstrained fn call_private_function(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field {
         call_private_function_oracle(contract_address, method_name, args)
+    }
+
+    #[oracle(callPublicFunction)]
+    unconstrained fn call_public_function_oracle(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field{}
+
+    unconstrained fn call_public_function(contract_address: AztecAddress, method_name: FunctionSelector, args: [Field; 4]) -> pub Field {
+        call_public_function_oracle(contract_address, method_name, args)
     }
 
     #[oracle(getNumberOfNewNotes)]

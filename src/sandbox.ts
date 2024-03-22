@@ -63,7 +63,7 @@ export const deployContract = async (pxe: PXE) => {
 };
 
 // todo: add notes -> how to catch them? Or passed as args (cumbersome++)
-export const internalCall = async (
+export const privateCall = async (
   pxe: PXE,
   contractAddress: AztecAddress,
   functionSelector: FunctionSelector,
@@ -115,6 +115,28 @@ export const internalCall = async (
   // TODO: use the fn selector instead
   let result = await deployedContract.methods.set_value(args[0]).send().wait();
 
+  return result.txHash;
+};
+
+// todo: add notes -> how to catch them? Or passed as args (cumbersome++)
+export const publicCall = async (
+  pxe: PXE,
+  contractAddress: AztecAddress,
+  functionSelector: FunctionSelector,
+  args: Fr[]
+) => {
+  // This is the same as privateCall for now -> hopefully, context will be different
+  let wallet = await createAccount(pxe);
+  let deployedContract = await MeaningOfLifeContract.at(
+    contractAddress,
+    wallet
+  );
+  console.log(args[0].toBigInt());
+  let result = await deployedContract.methods
+    .public_function_to_call(args[0].toBigInt())
+    .send()
+    .wait();
+  console.log(result.txHash);
   return result.txHash;
 };
 

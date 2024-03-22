@@ -32,50 +32,58 @@ export const MeaningOfLifeContractArtifact = loadContractArtifact(MeaningOfLifeC
  * Type-safe interface for contract MeaningOfLife;
  */
 export class MeaningOfLifeContract extends ContractBase {
-  
-  private constructor(
-    instance: ContractInstanceWithAddress,
-    wallet: Wallet,
-  ) {
+  private constructor(instance: ContractInstanceWithAddress, wallet: Wallet) {
     super(instance, MeaningOfLifeContractArtifact, wallet);
   }
-  
 
-  
   /**
    * Creates a contract instance.
    * @param address - The deployed contract's address.
    * @param wallet - The wallet to use when interacting with the contract.
    * @returns A promise that resolves to a new Contract instance.
    */
-  public static async at(
-    address: AztecAddress,
-    wallet: Wallet,
-  ) {
-    return Contract.at(address, MeaningOfLifeContract.artifact, wallet) as Promise<MeaningOfLifeContract>;
+  public static async at(address: AztecAddress, wallet: Wallet) {
+    return Contract.at(
+      address,
+      MeaningOfLifeContract.artifact,
+      wallet
+    ) as Promise<MeaningOfLifeContract>;
   }
 
-  
   /**
    * Creates a tx to deploy a new instance of this contract.
    */
-  public static deploy(wallet: Wallet, ) {
-    return new DeployMethod<MeaningOfLifeContract>(Point.ZERO, wallet, MeaningOfLifeContractArtifact, MeaningOfLifeContract.at, Array.from(arguments).slice(1));
+  public static deploy(wallet: Wallet) {
+    return new DeployMethod<MeaningOfLifeContract>(
+      Point.ZERO,
+      wallet,
+      MeaningOfLifeContractArtifact,
+      MeaningOfLifeContract.at,
+      Array.from(arguments).slice(1)
+    );
   }
 
   /**
    * Creates a tx to deploy a new instance of this contract using the specified public key to derive the address.
    */
-  public static deployWithPublicKey(publicKey: PublicKey, wallet: Wallet, ) {
-    return new DeployMethod<MeaningOfLifeContract>(publicKey, wallet, MeaningOfLifeContractArtifact, MeaningOfLifeContract.at, Array.from(arguments).slice(2));
+  public static deployWithPublicKey(publicKey: PublicKey, wallet: Wallet) {
+    return new DeployMethod<MeaningOfLifeContract>(
+      publicKey,
+      wallet,
+      MeaningOfLifeContractArtifact,
+      MeaningOfLifeContract.at,
+      Array.from(arguments).slice(2)
+    );
   }
 
   /**
    * Creates a tx to deploy a new instance of this contract using the specified constructor method.
    */
-  public static deployWithOpts<M extends keyof MeaningOfLifeContract['methods']>(
+  public static deployWithOpts<
+    M extends keyof MeaningOfLifeContract["methods"]
+  >(
     opts: { publicKey?: PublicKey; method?: M; wallet: Wallet },
-    ...args: Parameters<MeaningOfLifeContract['methods'][M]>
+    ...args: Parameters<MeaningOfLifeContract["methods"][M]>
   ) {
     return new DeployMethod<MeaningOfLifeContract>(
       opts.publicKey ?? Point.ZERO,
@@ -83,34 +91,53 @@ export class MeaningOfLifeContract extends ContractBase {
       MeaningOfLifeContractArtifact,
       MeaningOfLifeContract.at,
       Array.from(arguments).slice(1),
-      opts.method ?? 'constructor',
+      opts.method ?? "constructor"
     );
   }
-  
 
-  
   /**
    * Returns this contract's artifact.
    */
   public static get artifact(): ContractArtifact {
     return MeaningOfLifeContractArtifact;
   }
-  
 
   /** Type-safe wrappers for the public methods exposed by the contract. */
-  // TODO: Had to manually modify...
   public declare methods: {
-    
-    /** set_value(value: field) */
-    set_value: ((value: FieldLike) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
+    /** get_meaning_of_life() */
+    get_meaning_of_life: (() => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
 
-    /** compute_note_hash_and_nullifier(contract_address: struct, nonce: field, storage_slot: field, note_type_id: field, serialized_note: array) */
-    compute_note_hash_and_nullifier: ((contract_address: AztecAddressLike, nonce: FieldLike, storage_slot: FieldLike, note_type_id: FieldLike, serialized_note: FieldLike[]) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
+    /** public_function_to_call(value: integer) */
+    public_function_to_call: ((
+      value: bigint | number
+    ) => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
+
+    /** get_value() */
+    get_value: (() => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
 
     /** constructor() */
-    constructor: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
+    constructor: (() => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
 
-    /** get_meaning_of_life() */
-    get_meaning_of_life: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
+    /** get_public_value() */
+    get_public_value: (() => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
+
+    /** compute_note_hash_and_nullifier(contract_address: struct, nonce: field, storage_slot: field, note_type_id: field, serialized_note: array) */
+    compute_note_hash_and_nullifier: ((
+      contract_address: AztecAddressLike,
+      nonce: FieldLike,
+      storage_slot: FieldLike,
+      note_type_id: FieldLike,
+      serialized_note: FieldLike[]
+    ) => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
+
+    /** set_value(value: field) */
+    set_value: ((value: FieldLike) => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
   };
 }
