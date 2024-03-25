@@ -82,7 +82,6 @@ server.addMethod("callPrivateFunction", async (params) => {
 });
 
 server.addMethod("callPublicFunction", async (params) => {
-  console.log(params);
   const contractAddress = AztecAddress.fromString(params[0].Single.inner);
   const functionSelector = FunctionSelector.fromString(
     params[1].Single.inner.slice(-8)
@@ -90,7 +89,6 @@ server.addMethod("callPublicFunction", async (params) => {
   const args: Fr[] = params[2].Array.map(({ inner }: { inner: string }) =>
     Fr.fromString(inner)
   );
-  console.log(contractAddress, functionSelector, args);
   let txHash = await publicCall(pxe, contractAddress, functionSelector, args);
 
   // todo: handle revert -> return false? throw?

@@ -113,12 +113,14 @@ export const privateCall = async (
   );
 
   // TODO: use the fn selector instead
-  let result = await deployedContract.methods.set_value(args[0]).send().wait();
+  let result = await deployedContract.methods
+    .set_value(args[0].toField())
+    .send()
+    .wait();
 
   return result.txHash;
 };
 
-// todo: add notes -> how to catch them? Or passed as args (cumbersome++)
 export const publicCall = async (
   pxe: PXE,
   contractAddress: AztecAddress,
@@ -131,11 +133,13 @@ export const publicCall = async (
     contractAddress,
     wallet
   );
-  console.log(args[0].toBigInt());
-  let result = await deployedContract.methods
-    .public_function_to_call(args[0].toBigInt())
-    .send()
-    .wait();
+  console.log("args ", args[0].toField());
+  let result = await deployedContract
+    .withWallet(wallet)
+    .methods.public_function_to_call(args[0].toField())
+    .send({ skipPublicSimulation: false })
+    .wait({ debug: true });
+
   console.log(result.txHash);
   return result.txHash;
 };

@@ -104,26 +104,8 @@ export class MeaningOfLifeContract extends ContractBase {
 
   /** Type-safe wrappers for the public methods exposed by the contract. */
   public declare methods: {
-    /** get_meaning_of_life() */
-    get_meaning_of_life: (() => ContractFunctionInteraction) &
-      Pick<ContractMethod, "selector">;
-
-    /** public_function_to_call(value: integer) */
-    public_function_to_call: ((
-      value: bigint | number
-    ) => ContractFunctionInteraction) &
-      Pick<ContractMethod, "selector">;
-
     /** get_value() */
     get_value: (() => ContractFunctionInteraction) &
-      Pick<ContractMethod, "selector">;
-
-    /** constructor() */
-    constructor: (() => ContractFunctionInteraction) &
-      Pick<ContractMethod, "selector">;
-
-    /** get_public_value() */
-    get_public_value: (() => ContractFunctionInteraction) &
       Pick<ContractMethod, "selector">;
 
     /** compute_note_hash_and_nullifier(contract_address: struct, nonce: field, storage_slot: field, note_type_id: field, serialized_note: array) */
@@ -136,8 +118,26 @@ export class MeaningOfLifeContract extends ContractBase {
     ) => ContractFunctionInteraction) &
       Pick<ContractMethod, "selector">;
 
+    /** constructor() */
+    constructor: (() => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
+
     /** set_value(value: field) */
     set_value: ((value: FieldLike) => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
+
+    /** get_meaning_of_life() */
+    get_meaning_of_life: (() => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
+
+    /** get_public_value() */
+    get_public_value: (() => ContractFunctionInteraction) &
+      Pick<ContractMethod, "selector">;
+
+    /** public_function_to_call(value: field) */
+    public_function_to_call: ((
+      value: FieldLike
+    ) => ContractFunctionInteraction) &
       Pick<ContractMethod, "selector">;
   };
 }

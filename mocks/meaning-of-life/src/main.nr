@@ -5,7 +5,7 @@ contract MeaningOfLife {
     
     struct Storage {
         value: PrivateImmutable<FieldNote>,
-        public_value: PublicMutable<u32>,
+        public_value: PublicMutable<Field>,
     }
 
     #[aztec(private)]
@@ -15,12 +15,12 @@ contract MeaningOfLife {
         42
     }
 
-    unconstrained fn get_public_value() -> pub u32 {
+    unconstrained fn get_public_value() -> pub Field {
         storage.public_value.read()
     }
 
     #[aztec(public)]
-    fn public_function_to_call(value: u32) {
+    fn public_function_to_call(value: Field) {
         storage.public_value.write(value);
     }
 
